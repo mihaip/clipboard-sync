@@ -5,3 +5,4 @@ TODO
 - add icon to notifications
 - auto-dismiss notifications (add setting for interval)
 - handle quota errors
+- use commands API to define shortcuts for copy and paste
