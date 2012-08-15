@@ -1,0 +1,47 @@
+body {
+  font-family: Helvetica, sans-serif;
+  font-size: 13px;
+  margin: 0;
+}
+
+h1 {
+  margin-top: 0;
+  background: #eee;
+  padding: .5em;
+  border-bottom: solid 1px #ccc;
+}
+
+#options-form {
+  margin: 8px;
+}
+
+.form-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.form-table td {
+  padding: 0;
+}
+
+.form-table label {
+  display: block;
+  text-align: right;
+  font-weight: bold;
+  padding-right: 2px;
+}
+
+.form-table input[type="text"] {
+  width: 20em;
+}
+
+.form-table .explanation {
+  color: #999;
+  font-size: 90%;
+  padding-bottom: 5px;
+  max-width: 20em;
+}
+
+.form-table .buttons {
+  text-align: right;
+}

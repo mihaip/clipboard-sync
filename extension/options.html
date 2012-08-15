@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Clipboard Sync Options</title>
+  <script src="client-info.js"></script>
+  <script src="options.js"></script>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <h1>Clipboard Sync Options</h1>
+
+  <form id="options-form">
+    <table class="form-table">
+      <tr>
+        <td><label for="client-name">Client name:</label></td>
+        <td><input type="text" id="client-name"></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td><div class="explanation">Human-readable name shown in sync notifications.</div></td>
+      </tr>
+
+      <tr>
+        <td colspan="2" class="buttons"><input type="submit" value="Save"></td>
+      </tr>
+    </table>
+  </form>
+
+</body>
+</html>
