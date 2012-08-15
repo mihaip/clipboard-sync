@@ -54,7 +54,7 @@ function getClipboardData() {
     alert('Couldn\'t paste into buffer');
     return;
   }
-  return bufferNode.value + '1';
+  return bufferNode.value;
 }
 
 function setClipboardData(clipboardData) {
