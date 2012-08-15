@@ -9,8 +9,9 @@
     "default_title": "Clipboard Sync"
   },
   "permissions": [
-    "storage",
     "clipboardRead",
-    "clipboardWrite"
+    "clipboardWrite",
+    "notifications",
+    "storage"
   ]
 }

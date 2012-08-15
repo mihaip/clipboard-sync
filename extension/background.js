@@ -16,6 +16,7 @@ chrome.browserAction.onClicked.addListener(function() {
   var data = {};
   data[CLIPBOARD_DATA_KEY] = clipboardData;
   storage.set(data);
+  // TODO(mihaip): check for rate limiting.
 });
 
 chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
@@ -29,14 +30,20 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
 
   var clipboardData = changes[CLIPBOARD_DATA_KEY].newValue;
 
-  var bufferNode = document.getElementById('buffer');
-  bufferNode.value = clipboardData;
-  bufferNode.focus();
-  bufferNode.selectionStart = 0;
-  bufferNode.selectionEnd = clipboardData.length;
-  if (!document.execCommand('copy')) {
-    // TODO(mihaip): error handling
-    alert('Couldn\'t copy from buffer');
-    return;
+  var notification = new Notification('Clipboard synced', {
+    body: clipboardData
+  });
+  notification.onclick = function() {
+    var bufferNode = document.getElementById('buffer');
+    bufferNode.value = clipboardData;
+    bufferNode.focus();
+    bufferNode.selectionStart = 0;
+    bufferNode.selectionEnd = clipboardData.length;
+    if (!document.execCommand('copy')) {
+      // TODO(mihaip): error handling
+      alert('Couldn\'t copy from buffer');
+      return;
+    }
+    notification.close();
   }
 });
