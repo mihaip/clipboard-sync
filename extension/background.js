@@ -31,10 +31,18 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
       return;
     }
 
-    var notification = new Notification(
-        'Clipboard synced from ' + sourceClientInfo.name, {
-          body: clipboardData
-        });
+    var clipboardDataSnippet = clipboardData;
+    if (clipboardDataSnippet.length > 20) {
+      clipboardDataSnippet = clipboardDataSnippet.substring(0, 20) + '…';
+    }
+
+    // We use the legacy notifications API since it supports icon URLs. The
+    // new one doesn't (as implemented in WebKit).
+    var notification = webkitNotifications.createNotification(
+        chrome.extension.getURL('icon32.png'),
+        'Clipboard pushed from ' + sourceClientInfo.name,
+        'Click to copy "' + clipboardDataSnippet + '"');
+    notification.show();
     notification.onclick = function() {
       setClipboardData(clipboardData);
       notification.close();

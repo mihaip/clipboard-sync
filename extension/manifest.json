@@ -14,5 +14,8 @@
     "clipboardWrite",
     "notifications",
     "storage"
+  ],
+  "web_accessible_resources": [
+    "icon32.png"
   ]
 }
