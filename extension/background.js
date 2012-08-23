@@ -68,6 +68,7 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
         chrome.extension.getURL('icon32.png'),
         'Clipboard pushed from ' + sourceClientInfo.name,
         'Click to copy "' + clipboardDataSnippet + '"');
+    currentNotification.replaceId = CLIPBOARD_DATA_KEY;
     currentNotification.show();
     currentNotification.onclick = function() {
       setClipboardData(clipboardData);
