@@ -1,3 +1,5 @@
+var currentNotification;
+
 var CLIPBOARD_DATA_KEY = 'clipboard-data';
 
 chrome.browserAction.onClicked.addListener(function() {
@@ -6,31 +8,45 @@ chrome.browserAction.onClicked.addListener(function() {
     var storageData = {};
     storageData[CLIPBOARD_DATA_KEY] = {
       clientInfo: clientInfo,
-      value: clipboardData
+      value: clipboardData,
+      // We add the timestamp to the stored data to make sure that copying the
+      // same thing as what was last copying still generates a change
+      // notification that gets synced.
+      timestamp: Date.now()
     };
+
+    // TODO(mihaip): check for rate limiting.
     chrome.storage.sync.set(storageData);
     chrome.browserAction.setIcon({path: 'icon19-uploading.png'});
 
-    // TODO(mihaip): reset the icon when we get a data deletion notification.
-
+    // We're going to reset the icon when the data is copied, but if it never
+    // is (or if we somehow miss that notification), then make sure that it does
+    // eventually go back to normal.
     // TODO(mihaip): use alarm API when switching to event pages.
     setTimeout(function() {
       chrome.browserAction.setIcon({path: 'icon19.png'});
     }, 30 * 1000);
-    // TODO(mihaip): check for rate limiting.
   });
 });
 
 chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
-  if (storageNamespace != 'sync') {
-    return;
-  }
-
-  if (!CLIPBOARD_DATA_KEY in changes) {
+  if (storageNamespace != 'sync'|| !CLIPBOARD_DATA_KEY in changes) {
     return;
   }
 
   var data = changes[CLIPBOARD_DATA_KEY].newValue;
+
+  // Another client copied the data, therefore we can reset the icon and dismiss
+  // our notification (if any).
+  if (!data) {
+    chrome.browserAction.setIcon({path: 'icon19.png'});
+    if (currentNotification) {
+      currentNotification.close();
+      currentNotification = undefined;
+    }
+    return;
+  }
+
   var sourceClientInfo = data.clientInfo;
   var clipboardData = data.value;
 
@@ -48,17 +64,21 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
 
     // We use the legacy notifications API since it supports icon URLs. The
     // new one doesn't (as implemented in WebKit).
-    var notification = webkitNotifications.createNotification(
+    currentNotification = webkitNotifications.createNotification(
         chrome.extension.getURL('icon32.png'),
         'Clipboard pushed from ' + sourceClientInfo.name,
         'Click to copy "' + clipboardDataSnippet + '"');
-    notification.show();
-    notification.onclick = function() {
+    currentNotification.show();
+    currentNotification.onclick = function() {
       setClipboardData(clipboardData);
-      notification.close();
+      currentNotification.close();
+      currentNotification = undefined;
+
       chrome.browserAction.setIcon({path: 'icon19.png'});
-      // TODO(mihaip): delete the synced data once copied, which then removes
-      // the notifications where it's still displayed.
+
+      // Remove the synced data as a way of notifying the other clients that
+      // they can dismiss their notifications.
+      chrome.storage.sync.remove(CLIPBOARD_DATA_KEY);
     }
   });
 });
