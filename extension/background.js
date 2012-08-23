@@ -9,6 +9,14 @@ chrome.browserAction.onClicked.addListener(function() {
       value: clipboardData
     };
     chrome.storage.sync.set(storageData);
+    chrome.browserAction.setIcon({path: 'icon19-uploading.png'});
+
+    // TODO(mihaip): reset the icon when we get a data deletion notification.
+
+    // TODO(mihaip): use alarm API when switching to event pages.
+    setTimeout(function() {
+      chrome.browserAction.setIcon({path: 'icon19.png'});
+    }, 30 * 1000);
     // TODO(mihaip): check for rate limiting.
   });
 });
@@ -36,6 +44,8 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
       clipboardDataSnippet = clipboardDataSnippet.substring(0, 20) + '…';
     }
 
+    chrome.browserAction.setIcon({path: 'icon19-downloading.png'});
+
     // We use the legacy notifications API since it supports icon URLs. The
     // new one doesn't (as implemented in WebKit).
     var notification = webkitNotifications.createNotification(
@@ -46,6 +56,7 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
     notification.onclick = function() {
       setClipboardData(clipboardData);
       notification.close();
+      chrome.browserAction.setIcon({path: 'icon19.png'});
       // TODO(mihaip): delete the synced data once copied, which then removes
       // the notifications where it's still displayed.
     }
