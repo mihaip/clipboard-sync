@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Clipboard Sync Options</title>
   <script src="client-info.js"></script>
+  <script src="preferences.js"></script>
   <script src="options.js"></script>
   <link rel="stylesheet" href="options.css">
 </head>
@@ -25,6 +26,24 @@
       <tr>
         <td></td>
         <td><div class="explanation">Human-readable name shown in sync notifications.</div></td>
+      </tr>
+
+      <tr>
+        <td><label for="auto-dismiss-timeout">Dismiss notifications after:</label></td>
+        <td>
+          <select id="auto-dismiss-timeout">
+            <option value="30">30 seconds</option>
+            <option value="60">1 minute</option>
+            <option value="120">2 minutes</option>
+            <option value="300">5 minutes</option>
+            <option value="-1">never</option>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td><div class="explanation">Auto-close "clipboard pushed" notifications after this interval.</div></td>
       </tr>
 
       <tr>

@@ -112,6 +112,14 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
       chrome.storage.sync.remove(CLIPBOARD_DATA_KEY);
     }
 
+    getPreferences(function(preferences) {
+      if (preferences.autoDismissTimeout == -1) return;
+      // TODO(mihaip): use alarm API when switching to event pages.
+      setTimeout(function() {
+        currentNotification.close();
+      }, preferences.autoDismissTimeout * 1000);
+    });
+
     currentNotification.onclose = function() {
       currentNotification = undefined;
       chrome.browserAction.setIcon({path: 'icon19.png'});
