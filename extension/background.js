@@ -47,7 +47,19 @@ function handleUploadError(error) {
   errorNotification.onclose = function() {
     chrome.browserAction.setIcon({path: 'icon19.png'});
   }
+  // TODO(mihaip): use alarm API when switching to event pages.
   setTimeout(errorNotification.close.bind(errorNotification), 10 * 1000);
+}
+
+// TODO(mihaip): always use chrome.runtime once Chrome 22 hits stable.
+if (chrome.runtime && chrome.runtime.onInstalled) {
+  chrome.runtime.onInstalled.addListener(function() {
+    hasClientInfo(function(hasClientInfo) {
+      if (!hasClientInfo) {
+        chrome.tabs.create({url: 'options.html'});
+      }
+    });
+  });
 }
 
 chrome.storage.onChanged.addListener(function(changes, storageNamespace) {

@@ -1,5 +1,11 @@
 var CLIENT_INFO_KEY = 'client-info';
 
+function hasClientInfo(callback) {
+  chrome.storage.local.get(CLIENT_INFO_KEY, function(storageData) {
+    callback(storageData && CLIENT_INFO_KEY in storageData);
+  });
+}
+
 function getClientInfo(callback) {
   chrome.storage.local.get(CLIENT_INFO_KEY, function(storageData) {
     if (storageData && CLIENT_INFO_KEY in storageData) {
