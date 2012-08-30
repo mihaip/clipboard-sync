@@ -73,14 +73,16 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
     currentNotification.onclick = function() {
       setClipboardData(clipboardData);
       currentNotification.close();
-      currentNotification = undefined;
-
-      chrome.browserAction.setIcon({path: 'icon19.png'});
 
       // Remove the synced data as a way of notifying the other clients that
       // they can dismiss their notifications.
       chrome.storage.sync.remove(CLIPBOARD_DATA_KEY);
     }
+
+    currentNotification.onclose = function() {
+      currentNotification = undefined;
+      chrome.browserAction.setIcon({path: 'icon19.png'});
+    };
   });
 });
 
