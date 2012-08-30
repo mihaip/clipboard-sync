@@ -1,5 +1,4 @@
 TODO
-- 48x48 and 128x128 icons
 - auto-dismiss notifications (add setting for interval)
 - use commands API to define shortcuts for copy and paste
 - use event pages (and make sure that they're kept alive while the notification is displayed)
@@ -12,3 +11,4 @@ DONE
 - reset browser action icon when notification is manually closed
 - handle quota errors
 - show options page when first installed, and prompt for profile name to be filled in
+- 48x48 and 128x128 icons
