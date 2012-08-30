@@ -17,6 +17,7 @@
     "storage"
   ],
   "web_accessible_resources": [
-    "icon32.png"
+    "icon32-downloading.png",
+    "icon32-error.png"
   ]
 }

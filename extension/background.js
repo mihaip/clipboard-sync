@@ -15,19 +15,40 @@ chrome.browserAction.onClicked.addListener(function() {
       timestamp: Date.now()
     };
 
-    // TODO(mihaip): check for rate limiting.
-    chrome.storage.sync.set(storageData);
-    chrome.browserAction.setIcon({path: 'icon19-uploading.png'});
+    chrome.storage.sync.set(storageData, function() {
+      // TODO(mihaip): always use chrome.runtime once Chrome 22 hits stable.
+      var error = chrome.runtime ?
+          chrome.runtime.lastError : chrome.extension.lastError;
+      if (error) {
+        handleUploadError(error);
+      } else {
+        chrome.browserAction.setIcon({path: 'icon19-uploading.png'});
 
-    // We're going to reset the icon when the data is copied, but if it never
-    // is (or if we somehow miss that notification), then make sure that it does
-    // eventually go back to normal.
-    // TODO(mihaip): use alarm API when switching to event pages.
-    setTimeout(function() {
-      chrome.browserAction.setIcon({path: 'icon19.png'});
-    }, 30 * 1000);
+        // We're going to reset the icon when the data is copied, but if it never
+        // is (or if we somehow miss that notification), then make sure that it does
+        // eventually go back to normal.
+        // TODO(mihaip): use alarm API when switching to event pages.
+        setTimeout(function() {
+          chrome.browserAction.setIcon({path: 'icon19.png'});
+        }, 30 * 1000);
+      }
+    });
   });
 });
+
+function handleUploadError(error) {
+  chrome.browserAction.setIcon({path: 'icon19-error.png'});
+  var errorNotification = webkitNotifications.createNotification(
+      chrome.extension.getURL('icon32-error.png'),
+      'Error pushing clipboard',
+      error.message || '');
+  errorNotification.replaceId = 'clipboard-data-error';
+  errorNotification.show();
+  errorNotification.onclose = function() {
+    chrome.browserAction.setIcon({path: 'icon19.png'});
+  }
+  setTimeout(errorNotification.close.bind(errorNotification), 10 * 1000);
+}
 
 chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
   if (storageNamespace != 'sync'|| !CLIPBOARD_DATA_KEY in changes) {
@@ -65,10 +86,10 @@ chrome.storage.onChanged.addListener(function(changes, storageNamespace) {
     // We use the legacy notifications API since it supports icon URLs. The
     // new one doesn't (as implemented in WebKit).
     currentNotification = webkitNotifications.createNotification(
-        chrome.extension.getURL('icon32.png'),
+        chrome.extension.getURL('icon32-downloading.png'),
         'Clipboard pushed from ' + sourceClientInfo.name,
         'Click to copy "' + clipboardDataSnippet + '"');
-    currentNotification.replaceId = CLIPBOARD_DATA_KEY;
+    currentNotification.replaceId = 'clipboard-data-notification';
     currentNotification.show();
     currentNotification.onclick = function() {
       setClipboardData(clipboardData);
