@@ -1,7 +1,9 @@
 {
   "manifest_version": 2,
   "name": "Clipboard Sync",
-  "version": "1.0",
+  "description": "Sync your clipboard to any computer running Chrome",
+  "minimum_chrome_version": "21",
+  "version": "1.0.1",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
