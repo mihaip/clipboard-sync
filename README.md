@@ -4,11 +4,11 @@ Uses [Chrome sign-in](http://support.google.com/chrome/bin/answer.py?hl=en&answe
 
 The extension currently works with text only, and is subject to limitations imposed by the [storage API](http://developer.chrome.com/extensions/storage.html) (maximum length of 4096 characters, no more than 10 syncs per minute).
 
-Available at the Chrome Web Store at [https://chrome.google.com/webstore/detail/dapdfappilfdiljfpjcbkmkblldaemjg](https://chrome.google.com/webstore/detail/dapdfappilfdiljfpjcbkmkblldaemjg).
-
+Available at the Chrome Web Store at [https://chrome.google.com/webstore/detail/dapdfappilfdiljfpjcbkmkblldaemjg](https://chrome.google.com/webstore/detail/dapdfappilfdiljfpjcbkmkblldaemjg)`
 ### Potential future changes
 
 - Use the [Commands API](http://developer.chrome.com/trunk/extensions/commands.html) to define shortcuts for copy and paste.
 - Use [event pages](http://developer.chrome.com/trunk/extensions/event_pages.html).
 - See if `execCommand` when pasting generates [a paste event](http://dev.w3.org/2006/webapi/clipops/), use that for rich data support.
 - Don't show the sync notification if the clipboard data is stale (>1 hour old), for cases where a Chrome instance is started later.
+- Detect sync state (XHR to `chrome://signin`?)
